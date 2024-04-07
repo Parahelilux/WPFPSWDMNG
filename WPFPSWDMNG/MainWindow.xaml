@@ -1,0 +1,104 @@
+﻿<Window x:Class="WPFPSWDMNG.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Password Manager" Height="600" Width="800"
+        WindowStartupLocation="CenterScreen"
+        Background="White" Icon="/key-6-64.ico">
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="0,5"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#007AFF"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="#0A84FF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="DataGrid">
+            <Setter Property="Margin" Value="0,20,0,0"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="SelectionMode" Value="Single"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="AlternatingRowBackground" Value="#F7F7F7"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="CanUserResizeRows" Value="False"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBox x:Name="txtWebsite" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Website/Service" Foreground="Gray" GotFocus="txtWebsite_GotFocus" LostFocus="txtWebsite_LostFocus"/>
+            <TextBox x:Name="txtUsername" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="Username/Email" Foreground="Gray" GotFocus="txtUsername_GotFocus" LostFocus="txtUsername_LostFocus"/>
+            <TextBox x:Name="txtPassword" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="Password" Foreground="Gray" GotFocus="txtPassword_GotFocus" LostFocus="txtPassword_LostFocus"/>
+
+            <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="Password Length:" VerticalAlignment="Center" FontSize="14" Foreground="#333333"/>
+                <Slider x:Name="sliderPasswordLength" Width="200" Minimum="8" Maximum="20" Value="12" TickFrequency="1" IsSnapToTickEnabled="True" VerticalAlignment="Center" Margin="10,0"/>
+                <TextBlock x:Name="txtPasswordLength" Text="{Binding ElementName=sliderPasswordLength, Path=Value, StringFormat={}{0}}" VerticalAlignment="Center" FontSize="14" Foreground="#333333"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="btnGenerate" Content="Generate" Click="btnGenerate_Click" Margin="0,0,10,0"/>
+                <Button x:Name="btnSave" Content="Save" Click="btnSave_Click"/>
+            </StackPanel>
+        </Grid>
+
+        <DataGrid x:Name="dgPasswords" Grid.Row="1" SelectionChanged="dgPasswords_SelectionChanged">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Website/Service" Binding="{Binding Website}" Width="1*"/>
+                <DataGridTextColumn Header="Username/Email" Binding="{Binding Username}" Width="1.5*"/>
+                <DataGridTextColumn Header="Password" Binding="{Binding Password}" Width="1.5*"/>
+                <DataGridTemplateColumn Width="0.4*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Delete" Click="btnDelete_Click" Padding="10,5" Foreground="#FF3B30" BorderThickness="0" Cursor="Hand">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Foreground" Value="#FF453A"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>
