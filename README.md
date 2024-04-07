@@ -1,5 +1,6 @@
-Password Manager
-The Password Manager is a C# WPF application that allows users to generate, store, and manage their passwords securely. It provides a user-friendly interface for adding, editing, and deleting password entries, as well as generating strong passwords based on user-specified criteria.
+WPFPSWDMNG 
+
+This is a C# WPF application that allows users to generate, store, and manage their passwords securely. It provides a user-friendly interface for adding, editing, and deleting password entries, as well as generating strong passwords based on user-specified criteria.
 
 Project Structure
 The project is structured as follows:
