@@ -61,7 +61,7 @@
 
             <TextBox x:Name="txtWebsite" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Website/Service" Foreground="Gray" GotFocus="txtWebsite_GotFocus" LostFocus="txtWebsite_LostFocus"/>
             <TextBox x:Name="txtUsername" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="Username/Email" Foreground="Gray" GotFocus="txtUsername_GotFocus" LostFocus="txtUsername_LostFocus"/>
-            <TextBox x:Name="txtPassword" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="Password" Foreground="Gray" GotFocus="txtPassword_GotFocus" LostFocus="txtUsername_LostFocus"/>
+            <TextBox x:Name="txtPassword" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="Password" Foreground="Gray" GotFocus="txtPassword_GotFocus" LostFocus="txtPassword_LostFocus"/>
 
             <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBlock Text="Password Length:" VerticalAlignment="Center" FontSize="14" Foreground="#333333"/>
