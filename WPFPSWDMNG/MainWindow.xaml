@@ -61,7 +61,7 @@
 
             <TextBox x:Name="txtWebsite" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Website/Service" Foreground="Gray" GotFocus="txtWebsite_GotFocus" LostFocus="txtWebsite_LostFocus"/>
             <TextBox x:Name="txtUsername" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="Username/Email" Foreground="Gray" GotFocus="txtUsername_GotFocus" LostFocus="txtUsername_LostFocus"/>
-            <TextBox x:Name="txtPassword" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="Password" Foreground="Gray" GotFocus="txtPassword_GotFocus" LostFocus="txtPassword_LostFocus"/>
+            <TextBox x:Name="txtPassword" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="Password" Foreground="Gray" GotFocus="txtPassword_GotFocus" LostFocus="txtUsername_LostFocus"/>
 
             <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBlock Text="Password Length:" VerticalAlignment="Center" FontSize="14" Foreground="#333333"/>
@@ -72,9 +72,11 @@
             <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button x:Name="btnGenerate" Content="Generate" Click="btnGenerate_Click" Margin="0,0,10,0"/>
                 <Button x:Name="btnSave" Content="Save" Click="btnSave_Click"/>
+                <Button x:Name="btnPurgeAll" Content="Purge All" Click="btnPurgeAll_Click" Margin="10" Padding="10" />
             </StackPanel>
         </Grid>
-
+        
+        
         <DataGrid x:Name="dgPasswords" Grid.Row="1" SelectionChanged="dgPasswords_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Website/Service" Binding="{Binding Website}" Width="1*"/>

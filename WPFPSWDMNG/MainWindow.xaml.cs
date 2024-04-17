@@ -29,7 +29,7 @@ namespace WPFPSWDMNG
 
         private string GeneratePassword(int length)
         {
-            const string validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+-=[]{}|;:,.<>?";
+            const string validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+-=[]{}|;:,.<>?/~`";
             StringBuilder password = new StringBuilder();
             Random random = new Random();
 
@@ -44,9 +44,21 @@ namespace WPFPSWDMNG
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            string website = txtWebsite.Text;
-            string username = txtUsername.Text;
-            string password = txtPassword.Text;
+            string website = txtWebsite.Text.Trim();
+            string username = txtUsername.Text.Trim();
+            string password = txtPassword.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(website) || string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            {
+                MessageBox.Show("Please fill in all fields before saving.");
+                return;
+            }
+
+            if (password.Length < 8)
+            {
+                MessageBox.Show("Password must be at least 8 characters long.");
+                return;
+            }
 
             string encryptedPassword = PasswordProtector.EncryptPassword(password);
 
@@ -79,13 +91,16 @@ namespace WPFPSWDMNG
                         string encryptedPassword = parts[2];
                         string decryptedPassword = PasswordProtector.DecryptPassword(encryptedPassword);
 
-                        PasswordEntry passwordEntry = new PasswordEntry
+                        if (!string.IsNullOrEmpty(decryptedPassword))
                         {
-                            Website = website,
-                            Username = username,
-                            Password = decryptedPassword
-                        };
-                        PasswordEntries.Add(passwordEntry);
+                            PasswordEntry passwordEntry = new PasswordEntry
+                            {
+                                Website = website,
+                                Username = username,
+                                Password = decryptedPassword
+                            };
+                            PasswordEntries.Add(passwordEntry);
+                        }
                     }
                 }
             }
@@ -95,8 +110,35 @@ namespace WPFPSWDMNG
         {
             if (dgPasswords.SelectedItem is PasswordEntry selectedEntry)
             {
-                PasswordEntries.Remove(selectedEntry);
-                SavePasswordEntries();
+                MessageBoxResult result = MessageBox.Show("Are you sure you want to delete the selected password entry?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    PasswordEntries.Remove(selectedEntry);
+                    SavePasswordEntries();
+                    MessageBox.Show("Password entry deleted successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select a password entry to delete.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void btnPurgeAll_Click(object sender, RoutedEventArgs e)
+        {
+            if (PasswordEntries.Count > 0)
+            {
+                MessageBoxResult result = MessageBox.Show("Are you sure you want to purge all password entries?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (result == MessageBoxResult.Yes)
+                {
+                    PasswordEntries.Clear();
+                    SavePasswordEntries();
+                    MessageBox.Show("All password entries have been purged successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            else
+            {
+                MessageBox.Show("There are no password entries to purge.", "No Entries", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -162,9 +204,9 @@ namespace WPFPSWDMNG
         private void txtPassword_GotFocus(object sender, RoutedEventArgs e)
         {
             if (txtPassword.Text == "Password")
-            {
+                {
                 txtPassword.Text = string.Empty;
-                txtPassword.Foreground = Brushes.Black;
+                txtPassword.Foreground = Brushes.Gray;
             }
         }
 
