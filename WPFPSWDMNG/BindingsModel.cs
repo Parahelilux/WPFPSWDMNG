@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
+using Microsoft.Win32;
 
 namespace WPFPSWDMNG
 {
@@ -26,6 +27,13 @@ namespace WPFPSWDMNG
         }
 
         public ObservableCollection<PasswordEntry> PasswordEntries { get; set; }
+
+        private string _filePath = "passwords.txt";
+        public string FilePath
+        {
+            get { return _filePath; }
+            set { _filePath = value; OnPropertyChanged(nameof(FilePath)); }
+        }
 
         private string? _website;
         public string? Website
@@ -59,6 +67,8 @@ namespace WPFPSWDMNG
         public ICommand SaveCommand { get; set; }
         public ICommand DeleteCommand { get; set; }
         public ICommand PurgeAllCommand { get; set; }
+        public ICommand ChangeFilePathCommand { get; set; }
+        public ICommand LoadFromFileCommand { get; set; }
 
         public BindingsModel()
         {
@@ -69,6 +79,8 @@ namespace WPFPSWDMNG
             SaveCommand = new RelayCommand(SavePassword);
             DeleteCommand = new RelayCommand<PasswordEntry>(DeletePassword);
             PurgeAllCommand = new RelayCommand(PurgeAllPasswords);
+            ChangeFilePathCommand = new RelayCommand(ChangeFilePath);
+            LoadFromFileCommand = new RelayCommand(LoadFromFile);
         }
 
         private void GeneratePassword()
@@ -102,7 +114,7 @@ namespace WPFPSWDMNG
 
             string encryptedPassword = PasswordProtector.EncryptPassword(Password);
             string passwordEntry = $"{Website},{Username},{encryptedPassword}";
-            File.AppendAllText("passwords.txt", passwordEntry + Environment.NewLine);
+            File.AppendAllText(FilePath, passwordEntry + Environment.NewLine);
 
             PasswordEntry newEntry = new PasswordEntry
             {
@@ -117,9 +129,9 @@ namespace WPFPSWDMNG
 
         private void LoadSavedPasswords()
         {
-            if (File.Exists("passwords.txt"))
+            if (File.Exists(FilePath))
             {
-                string[] lines = File.ReadAllLines("passwords.txt");
+                string[] lines = File.ReadAllLines(FilePath);
                 foreach (string line in lines)
                 {
                     string[] parts = line.Split(',');
@@ -188,7 +200,29 @@ namespace WPFPSWDMNG
                 sb.AppendLine(passwordEntry);
             }
 
-            File.WriteAllText("passwords.txt", sb.ToString());
+            File.WriteAllText(FilePath, sb.ToString());
+        }
+
+        private void ChangeFilePath()
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                FilePath = saveFileDialog.FileName;
+                LoadSavedPasswords();
+            }
+        }
+
+        private void LoadFromFile()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                FilePath = openFileDialog.FileName;
+                LoadSavedPasswords();
+            }
         }
 
         private class RelayCommand : ICommand
