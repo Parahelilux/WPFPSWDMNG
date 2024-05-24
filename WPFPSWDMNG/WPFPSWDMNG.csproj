@@ -1,19 +1,43 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UseWPF>true</UseWPF>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UseWPF>true</UseWPF>
+		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+		<EnableDefaultPageItems>false</EnableDefaultPageItems>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="key-6-64.ico" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="key-6-64.ico" />
+		<Resource Include="key-6-64.ico" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Resource Include="key-6-64.ico" />
-  </ItemGroup>
+	<ItemGroup>
+		<Page Include="App.xaml" />
+		<Compile Include="App.xaml.cs" />
+		<Compile Include="BindingsModel.cs" />
+		<Compile Include="MainWindow.xaml.cs" />
+		<Compile Include="PasswordEntry.cs" />
+		<Compile Include="PasswordProtector.cs" />
+		<Page Include="MainWindow.xaml" />
+	</ItemGroup>
+
+	<!-- Targets and Tasks -->
+	
+	<Target Name="BeforeBuild">
+		<Message Importance="high" Text="Starting build process..." />
+	</Target>
+
+	<Target Name="AfterBuild">
+		<Message Importance="high" Text="Build process completed!" />
+	</Target>
+
+	<Target Name="Clean">
+		<Delete Files="bin\$(Configuration)\net6.0-windows\*.*" />
+		<Delete Files="obj\$(Configuration)\net6.0-windows\*.*" />
+	</Target>
 
 </Project>
