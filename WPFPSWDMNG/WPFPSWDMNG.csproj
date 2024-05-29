@@ -1,5 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+
+	<!-- Properties and Items -->
+	
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net6.0-windows</TargetFramework>
@@ -18,10 +21,18 @@
 	<ItemGroup>
 		<Page Include="App.xaml" />
 		<Compile Include="App.xaml.cs" />
-		<Compile Include="BindingsModel.cs" />
+		<Compile Include="FileService.cs" />
+		<Compile Include="IFileService.cs" />
+		<Compile Include="IPasswordGenerator.cs" />
+		<Compile Include="IPasswordManagerViewModel.cs" />
+		<Compile Include="IPasswordProtector.cs" />
 		<Compile Include="MainWindow.xaml.cs" />
 		<Compile Include="PasswordEntry.cs" />
+		<Compile Include="PasswordGenerator.cs" />
+		<Compile Include="PasswordManagerViewModel.cs" />
 		<Compile Include="PasswordProtector.cs" />
+		<Compile Include="RelayCommand.cs" />
+		<PackageReference Include="Moq" Version="4.20.70" />
 		<Page Include="MainWindow.xaml" />
 	</ItemGroup>
 

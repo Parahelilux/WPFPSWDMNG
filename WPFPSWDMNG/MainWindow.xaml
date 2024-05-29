@@ -4,104 +4,77 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Password Manager" Height="600" Width="800"
+        Title="Password Manager" Height="720" Width="800"
         WindowStartupLocation="CenterScreen"
-        Background="White" Icon="/key-6-64.ico" Topmost="True">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="64*"/>
-            <ColumnDefinition Width="7*"/>
-            <ColumnDefinition Width="14*"/>
-            <ColumnDefinition Width="512*"/>
-            <ColumnDefinition Width="156*"/>
-            <ColumnDefinition Width="47*"/>
-        </Grid.ColumnDefinitions>
+        Background="#F0F0F0" Icon="/key-6-64.ico">
+    <Grid Margin="20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" MinHeight="335"/>
-            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid Margin="20,10,20,163" Grid.ColumnSpan="6">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="31"/>
-                <RowDefinition Height="0"/>
-                <RowDefinition Height="22"/>
-                <RowDefinition Height="24.92"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="4*"/>
-                <ColumnDefinition Width="57*"/>
-                <ColumnDefinition Width="91*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Website:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" Margin="0,1,2,0" Height="16" Grid.ColumnSpan="3"/>
-            <TextBox x:Name="txtWebsite" Grid.Row="0" Text="{Binding Website, UpdateSourceTrigger=PropertyChanged}" Margin="43,0,0,18" Grid.RowSpan="1" Grid.Column="1" Grid.ColumnSpan="2"/>
-            <TextBlock Text="Username:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Margin="0,1,5,0" Height="16" Grid.ColumnSpan="3"/>
-            <TextBox x:Name="txtUsername" Grid.Row="1" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Margin="43,0,0,18" Grid.RowSpan="1" Grid.Column="1" Grid.ColumnSpan="2"/>
-            <TextBlock Text="Password:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Top" Margin="0,0,3,0" Height="16" Grid.ColumnSpan="3"/>
-            <TextBox x:Name="txtPassword" Grid.Row="2" Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}" Margin="43,0,0,14" Grid.RowSpan="1" Grid.Column="1" Grid.ColumnSpan="2"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Row="4" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,2,0" Height="18" Grid.ColumnSpan="3">
-                <TextBlock Text="Password Length:" Foreground="#333333"/>
-                <Slider x:Name="sliderPasswordLength" Width="654" Minimum="9" Maximum="36"
-                 Value="{Binding PasswordLength}" TickFrequency="1" IsSnapToTickEnabled="True"
-                 VerticalAlignment="Center" Margin="10,0"/>
-                <TextBlock x:Name="txtPasswordLength" Text="{Binding Value, ElementName=sliderPasswordLength, StringFormat=\{0:N0\}}"
-                           VerticalAlignment="Center" FontSize="14" Foreground="#333333"/>
+        <!-- Header -->
+
+        <!-- Left Panel - Input Fields -->
+        <StackPanel Grid.Row="1" Grid.Column="0" Margin="10,0,20,0">
+            <GroupBox Header="Create Password" Padding="20" Background="White" BorderBrush="#E0E0E0" BorderThickness="1">
+                <StackPanel>
+                    <TextBlock Text="Website" FontWeight="Medium" FontSize="14" Margin="0,5"/>
+                    <TextBox Text="{Binding Website, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10" Padding="10" BorderBrush="#E0E0E0" BorderThickness="1" Background="#FFFFFF" FontSize="14"/>
+
+                    <TextBlock Text="Username" FontWeight="Medium" FontSize="14" Margin="0,5"/>
+                    <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10" Padding="10" BorderBrush="#E0E0E0" BorderThickness="1" Background="#FFFFFF" FontSize="14"/>
+
+                    <TextBlock Text="Password Length" FontWeight="Medium" FontSize="14" Margin="0,5"/>
+                    <Slider Minimum="8" Maximum="32" Value="{Binding PasswordLength, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10" TickFrequency="1" IsSnapToTickEnabled="True"/>
+                    <TextBlock Text="{Binding PasswordLength}" HorizontalAlignment="Center" FontSize="14" Margin="0,0,0,10"/>
+
+                    <Button Command="{Binding GenerateCommand}" Content="Generate Password" Margin="0,5,0,10" Padding="10" FontSize="14" FontWeight="Medium" BorderBrush="#CCCCCC" BorderThickness="1"/>
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
+
+        <!-- Right Panel - Password Display and Buttons -->
+        <StackPanel Grid.Row="1" Grid.Column="1" Margin="10,0,0,0">
+            <GroupBox Header="Generated Password" Padding="20" Background="White" BorderBrush="#E0E0E0" BorderThickness="1">
+                <StackPanel>
+                    <TextBox Text="{Binding Password}" IsReadOnly="True" Margin="0,0,0,10" Padding="10" BorderBrush="#E0E0E0" BorderThickness="1" Background="#FFFFFF" FontSize="14"/>
+                    <Button Command="{Binding SaveCommand}" Content="Save Password" Margin="0,5,0,10" Padding="10" FontSize="14" FontWeight="Medium" BorderBrush="#CCCCCC" BorderThickness="1"/>
+                </StackPanel>
+            </GroupBox>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                <Button Command="{Binding ChangeFilePathCommand}" Content="Change File Location" Margin="5" Padding="10" FontSize="14" FontWeight="Medium" BorderBrush="#CCCCCC" BorderThickness="1"/>
+                <Button Command="{Binding LoadFromFileCommand}" Content="Load From File" Margin="5" Padding="10" FontSize="14" FontWeight="Medium" BorderBrush="#CCCCCC" BorderThickness="1"/>
+                <Button Command="{Binding PurgeAllCommand}" Content="Purge All" Margin="5" Padding="10" FontSize="14" FontWeight="Medium" BorderBrush="#CCCCCC" BorderThickness="1"/>
             </StackPanel>
+        </StackPanel>
 
-            <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Left" Width="760" Margin="0,5,0,-12" Grid.ColumnSpan="3">
-                <Grid Width="10"/>
-                <Button x:Name="btnChangeFilePath" Content="Change File Location" Command="{Binding ChangeFilePathCommand}" Margin="3" Padding="3"/>
-                <Button x:Name="btnLoadFromFile" Content="Load From File" Command="{Binding LoadFromFileCommand}" Margin="3" Padding="3"/>
-                <Grid Width="350"/>
-                <Button x:Name="btnGenerate" Content="Generate" Command="{Binding GenerateCommand}" Margin="3" Padding="3"/>
-                <Button x:Name="btnSave" Content="Save" Command="{Binding SaveCommand}" Margin="3" Padding="3"/>
-                <Button x:Name="btnPurgeAll" Content="Purge All" Command="{Binding PurgeAllCommand}" Margin="3" Padding="3" />
-
-            </StackPanel>
-        </Grid>
-
-        <DataGrid x:Name="dgPasswords" ItemsSource="{Binding PasswordEntries}"
-                  SelectedItem="{Binding SelectedPasswordEntry, Mode=TwoWay}" AutoGenerateColumns="False"
-                  CanUserAddRows="False" Margin="10,177,10,10" Grid.RowSpan="2"
-                  RowHeight="30" Grid.ColumnSpan="6">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Website" Binding="{Binding Website}" Width="*">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="VerticalAlignment" Value="Center" />
-                            <Setter Property="Padding" Value="2" />
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn Header="Username" Binding="{Binding Username}" Width="*">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="VerticalAlignment" Value="Center" />
-                            <Setter Property="Padding" Value="2" />
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn Header="Password" Binding="{Binding Password}" Width="*">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="VerticalAlignment" Value="Center" />
-                            <Setter Property="Padding" Value="2" />
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <DataGridTemplateColumn Width="60">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Content="Delete" Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                    CommandParameter="{Binding}" Padding="2" Margin="2" VerticalAlignment="Center" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+        <!-- Password List -->
+        <GroupBox Grid.Row="2" Grid.ColumnSpan="2" Header="Saved Passwords" Margin="10,20,10,10" Padding="20" Background="White" BorderBrush="#E0E0E0" BorderThickness="1">
+            <DataGrid ItemsSource="{Binding PasswordEntries}" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectedItem="{Binding SelectedPasswordEntry}" 
+                      BorderBrush="#E0E0E0" BorderThickness="1" Background="#FFFFFF">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Website" Binding="{Binding Website}" Width="*"/>
+                    <DataGridTextColumn Header="Username" Binding="{Binding Username}" Width="*"/>
+                    <DataGridTextColumn Header="Password" Binding="{Binding Password}" Width="*"/>
+                    <DataGridTemplateColumn Width="80">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Delete" Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding}" Padding="1" Margin="1" VerticalAlignment="Center" BorderBrush="#CCCCCC" BorderThickness="1"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
     </Grid>
 </Window>

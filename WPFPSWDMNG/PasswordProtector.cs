@@ -1,24 +1,53 @@
-﻿﻿using System;
-using System.Diagnostics;
+﻿using System;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace WPFPSWDMNG
 {
-    public static class PasswordProtector
+    public class PasswordProtector : IPasswordProtector
     {
-        public static string EncryptPassword(string password)
+        private static readonly byte[] Key = Encoding.UTF8.GetBytes("your-encryption-key-here");
+
+        public string EncryptPassword(string password)
         {
-            byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
-            byte[] encryptedBytes = ProtectedData.Protect(passwordBytes, null, DataProtectionScope.CurrentUser);
-            return Convert.ToBase64String(encryptedBytes);
+            using (var aes = Aes.Create())
+            {
+                aes.Key = Key;
+                aes.GenerateIV();
+
+                using (var encryptor = aes.CreateEncryptor(aes.Key, aes.IV))
+                using (var ms = new System.IO.MemoryStream())
+                {
+                    ms.Write(aes.IV, 0, aes.IV.Length);
+                    using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
+                    using (var writer = new StreamWriter(cs))
+                    {
+                        writer.Write(password);
+                    }
+                    return Convert.ToBase64String(ms.ToArray());
+                }
+            }
         }
 
-        public static string DecryptPassword(string encryptedPassword)
+        public string DecryptPassword(string encryptedPassword)
         {
-            byte[] encryptedBytes = Convert.FromBase64String(encryptedPassword);
-            byte[] decryptedBytes = ProtectedData.Unprotect(encryptedBytes, null, DataProtectionScope.CurrentUser);
-            return Encoding.UTF8.GetString(decryptedBytes);
+            var buffer = Convert.FromBase64String(encryptedPassword);
+            using (var aes = Aes.Create())
+            {
+                aes.Key = Key;
+                var iv = new byte[aes.BlockSize / 8];
+                Buffer.BlockCopy(buffer, 0, iv, 0, iv.Length);
+                aes.IV = iv;
+
+                using (var decryptor = aes.CreateDecryptor(aes.Key, aes.IV))
+                using (var ms = new System.IO.MemoryStream(buffer, iv.Length, buffer.Length - iv.Length))
+                using (var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
+                using (var reader = new StreamReader(cs))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
         }
     }
 }
