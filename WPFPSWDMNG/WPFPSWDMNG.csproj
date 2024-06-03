@@ -23,10 +23,12 @@
 		<Compile Include="App.xaml.cs" />
 		<Compile Include="FileService.cs" />
 		<Compile Include="IFileService.cs" />
+		<Compile Include="IMessageBoxService.cs" />
 		<Compile Include="IPasswordGenerator.cs" />
 		<Compile Include="IPasswordManagerViewModel.cs" />
 		<Compile Include="IPasswordProtector.cs" />
 		<Compile Include="MainWindow.xaml.cs" />
+		<Compile Include="MessageBoxService.cs" />
 		<Compile Include="PasswordEntry.cs" />
 		<Compile Include="PasswordGenerator.cs" />
 		<Compile Include="PasswordManagerViewModel.cs" />

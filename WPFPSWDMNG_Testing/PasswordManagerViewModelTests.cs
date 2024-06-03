@@ -1,5 +1,5 @@
-﻿using System.Collections.ObjectModel;
-using Moq;
+﻿using Moq;
+using System.Windows;
 using WPFPSWDMNG;
 using Xunit;
 
@@ -10,6 +10,7 @@ namespace WPFPSWDMNG.Tests
         private readonly Mock<IPasswordGenerator> _passwordGeneratorMock;
         private readonly Mock<IFileService> _fileServiceMock;
         private readonly Mock<IPasswordProtector> _passwordProtectorMock;
+        private readonly Mock<IMessageBoxService> _messageBoxServiceMock;
         private readonly PasswordManagerViewModel _viewModel;
 
         public PasswordManagerViewModelTests()
@@ -17,10 +18,12 @@ namespace WPFPSWDMNG.Tests
             _passwordGeneratorMock = new Mock<IPasswordGenerator>();
             _fileServiceMock = new Mock<IFileService>();
             _passwordProtectorMock = new Mock<IPasswordProtector>();
+            _messageBoxServiceMock = new Mock<IMessageBoxService>();
             _viewModel = new PasswordManagerViewModel(
                 _passwordGeneratorMock.Object,
                 _fileServiceMock.Object,
-                _passwordProtectorMock.Object);
+                _passwordProtectorMock.Object,
+                _messageBoxServiceMock.Object);
         }
 
         [Fact]
@@ -63,6 +66,10 @@ namespace WPFPSWDMNG.Tests
             _viewModel.PasswordEntries.Add(passwordEntry);
             _viewModel.SelectedPasswordEntry = passwordEntry;
 
+            _messageBoxServiceMock
+                .Setup(mb => mb.Show("Are you sure you want to delete the selected password entry?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question))
+                .Returns(MessageBoxResult.Yes);
+
             // Act
             _viewModel.DeleteCommand.Execute(passwordEntry);
 
@@ -76,6 +83,8 @@ namespace WPFPSWDMNG.Tests
             // Arrange
             _viewModel.PasswordEntries.Add(new PasswordEntry { Website = "example.com", Username = "user1", Password = "TestPassword123!" });
             _viewModel.PasswordEntries.Add(new PasswordEntry { Website = "example2.com", Username = "user2", Password = "TestPassword456!" });
+
+            _messageBoxServiceMock.Setup(mb => mb.Show(It.IsAny<string>(), It.IsAny<string>(), MessageBoxButton.YesNo, MessageBoxImage.Warning)).Returns(MessageBoxResult.Yes);
 
             // Act
             _viewModel.PurgeAllCommand.Execute(null);

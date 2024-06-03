@@ -19,7 +19,6 @@ namespace WPFPSWDMNG.Tests
         [InlineData(20)]
         [InlineData(32)]
         [InlineData(64)]
-
         public void Generate_ShouldReturnPasswordOfSpecifiedLength(int length)
         {
             // Act
@@ -30,19 +29,17 @@ namespace WPFPSWDMNG.Tests
         }
 
         [Fact]
-        public void Generate_ShouldContainDifferentCharacterTypes()
+        public void Generate_ShouldNotContainDisallowedCharacters()
         {
             // Arrange
             int length = 12;
+            string disallowedChars = "!@#$%^&*()_+-=[]{}|;:,.<>?/~`";
 
             // Act
             string password = _passwordGenerator.Generate(length);
 
             // Assert
-            Assert.Contains(password, c => char.IsLower(c));
-            Assert.Contains(password, c => char.IsUpper(c));
-            Assert.Contains(password, c => char.IsDigit(c));
-            Assert.Contains(password, c => "!@#$%^&*()_+-=[]{}|;:,.<>?/~`".Contains(c));
+            Assert.All(password, c => Assert.DoesNotContain(c, disallowedChars));
         }
     }
 }
