@@ -12,12 +12,16 @@ namespace WPFPSWDMNG.Tests
             _passwordGenerator = new PasswordGenerator();
         }
 
-        [Fact]
-        public void Generate_ShouldReturnPasswordOfSpecifiedLength()
-        {
-            // Arrange
-            int length = 12;
+        [Theory]
+        [InlineData(8)]
+        [InlineData(12)]
+        [InlineData(16)]
+        [InlineData(20)]
+        [InlineData(32)]
+        [InlineData(64)]
 
+        public void Generate_ShouldReturnPasswordOfSpecifiedLength(int length)
+        {
             // Act
             string password = _passwordGenerator.Generate(length);
 
