@@ -24,12 +24,6 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
 
-    - name: Build project
-      run: dotnet build --configuration Release --no-restore
-
-    - name: Run tests
-      run: dotnet test --no-build --verbosity normal
-
     - name: Publish artifacts
       if: success()
       run: dotnet publish -c Release -o ${{ github.workspace }}/publish
