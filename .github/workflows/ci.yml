@@ -27,25 +27,39 @@ jobs:
     - name: Clean previous builds
       run: dotnet clean -c Release
 
+    - name: Build project
+      run: dotnet build -c Release
+
     - name: Publish artifacts
-      if: success()
       run: dotnet publish -c Release -o ${{ github.workspace }}/publish
 
     - name: Create ZIP file
-      if: success()
       run: |
         cd ${{ github.workspace }}/publish
         if (Test-Path "../published-app.zip") { Remove-Item "../published-app.zip" }
         powershell Compress-Archive -Path * -DestinationPath ../published-app.zip
 
-    - name: Upload ZIP artifact
-      uses: actions/upload-artifact@v2
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: published-app-zip
-        path: ${{ github.workspace }}/published-app.zip
+        tag_name: v${{ github.run_number }}
+        release_name: Release v${{ github.run_number }}
+        body: |
+          Release notes for v${{ github.run_number }}
+          Build Number: ${{ github.run_number }}
+          Commit: ${{ github.sha }}
+        draft: false
+        prerelease: false
 
-    - name: Add build metadata
-      if: success()
-      run: |
-        echo "Build Number: $GITHUB_RUN_NUMBER" > ${{ github.workspace }}/publish/build_metadata.txt
-        echo "Commit: $GITHUB_SHA" >> ${{ github.workspace }}/publish/build_metadata.txt
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ github.workspace }}/published-app.zip
+        asset_name: published-app.zip
+        asset_content_type: application/zip
