@@ -9,7 +9,7 @@ namespace WPFPSWDMNG
         {
             File.WriteAllLines(filePath, lines);
         }
-
+        /// Test
         public IEnumerable<string> Load(string filePath)
         {
             if (File.Exists(filePath))
