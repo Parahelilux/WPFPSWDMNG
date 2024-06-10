@@ -24,6 +24,9 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
 
+    - name: Clean previous builds
+      run: dotnet clean -c Release
+
     - name: Publish artifacts
       if: success()
       run: dotnet publish -c Release -o ${{ github.workspace }}/publish
@@ -32,6 +35,7 @@ jobs:
       if: success()
       run: |
         cd ${{ github.workspace }}/publish
+        if (Test-Path "../published-app.zip") { Remove-Item "../published-app.zip" }
         powershell Compress-Archive -Path * -DestinationPath ../published-app.zip
 
     - name: Upload ZIP artifact
@@ -39,3 +43,9 @@ jobs:
       with:
         name: published-app-zip
         path: ${{ github.workspace }}/published-app.zip
+
+    - name: Add build metadata
+      if: success()
+      run: |
+        echo "Build Number: $GITHUB_RUN_NUMBER" > ${{ github.workspace }}/publish/build_metadata.txt
+        echo "Commit: $GITHUB_SHA" >> ${{ github.workspace }}/publish/build_metadata.txt
