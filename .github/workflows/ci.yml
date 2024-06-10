@@ -34,9 +34,14 @@ jobs:
       if: success()
       run: dotnet publish -c Release -o ${{ github.workspace }}/publish
 
-    - name: Upload artifact
+    - name: Create ZIP file
+      if: success()
+      run: |
+        cd ${{ github.workspace }}/publish
+        powershell Compress-Archive -Path * -DestinationPath ../published-app.zip
+
+    - name: Upload ZIP artifact
       uses: actions/upload-artifact@v2
       with:
-        name: published-app
-        path: ${{ github.workspace }}/publish
-
+        name: published-app-zip
+        path: ${{ github.workspace }}/published-app.zip
